@@ -207,169 +207,190 @@ template <class type>
 void Fill(type T[],int size,float co)
 {
     for(int i=0;i<size*co;i++)
- {
-     T[i]=i;
- }
-  for(int i=size*co+1;i<size;i++)
- {
-     T[i]=(rand()%size+size*co+1);
- }
+    {
+        T[i]=i;
+    }
+    for(int i=size*co+1;i<size;i++)
+    {
+        T[i]=(rand()%size+size*co+1);
+    }
 }
 
 int main ()
 {
-ofstream write("resoults.txt");
-write<<"TYPE \t SIZE \t sorted \t time"<<endl;
-clock_t beg,fin;
-int size;
-long double co,timeo;
-int S[]={10000,50000,100000,500000,1000000};
-float CO[]={0,0.25,0.5,0.75,0.95,0.99,0.997};
-int sorted;
- srand( time(NULL));
- for(int c=0;c<7;c++)
- {
-     co=CO[c];
-     for(int s=0;s<5;s++)
-{ 
-    size=S[s]; 
-    sorted=0;
-    beg=clock();
-    for(int j=0;j<100;j++)
- {
-TYPET *T=Create<TYPET>(size);
-Fill(T,size,co);
+    ofstream write("resoults.txt");
+    write<<"TYPE \t SIZE \t sorted \t time"<<endl;
+    clock_t beg,fin,preps,prepf;
+    int size;
+    long double co,timeo;
+    int S[]={10000,50000,100000,500000,1000000};
+    float CO[]={0,0.25,0.5,0.75,0.95,0.99,0.997};
+    int sorted;
 
- qs(T,0,size-1);
+    srand( time(NULL));
+    for(int c=0;c<7;c++)
+    {
+        co=CO[c];
+        for(int s=0;s<5;s++)
+        { 
+            size=S[s]; 
+            sorted=0;
+            beg=clock();
+            //QuickSort
+            for(int j=0;j<100;j++)
+            {
+             
+                TYPET *T=Create<TYPET>(size);
+                Fill(T,size,co);
+             
+                qs(T,0,size-1);
+              
+                if(spr(T,0,size)==true)
+                {
+                    sorted++;
+                }
 
-if(spr(T,0,size)==true)
-{
-    sorted++;
-}
+                delete [] T;
+            }
+            fin=clock();
+            timeo=(long double)(fin-beg)/(CLOCKS_PER_SEC);
 
-delete [] T;
-}
-fin=clock();
-timeo=(long double)(fin-beg)/CLOCKS_PER_SEC;
-std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o pierwszych "<<co*100<<"% posortowanych elementach uzywajac quick sorta w "<<timeo<<" s"<<std::endl;
-write<<"Quicksort :"<<size<<"\t"<<co*100<<"\t"<<timeo<<std::endl;
-sorted=0;
-beg=clock();
-for(int j=0;j<100;j++)
- {
-TYPET *T=Create<TYPET>(size);
-Fill(T,size,co);
+            std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o pierwszych "<<co*100<<"% posortowanych elementach uzywajac quick sorta w "<<timeo<<" s"<<std::endl;
+            write<<"Quicksort :"<<size<<"\t"<<co*100<<"\t"<<timeo<<std::endl;
 
- MS(T,0,size-1);
- 
+            //Merge Sort
+            sorted=0;
+            
+            beg=clock();
+            for(int j=0;j<100;j++)
+            {
+             
+                TYPET *T=Create<TYPET>(size);
+                Fill(T,size,co);
+             
+                MS(T,0,size-1);
+              
+                if(spr(T,0,size)==true)
+                    {
+                        sorted++;
+                    }
+                        
+                delete [] T;
+            }
+            fin=clock();
+            timeo=(long double)(fin-beg)/(CLOCKS_PER_SEC);
+            std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o pierwszych "<<co*100<<"% posortowanych elementch uzywajac merge sorta w "<<timeo<<" s"<<std::endl;
+            write<<"Mergesort :"<<size<<"\t"<<co*100<<"\t"<<timeo<<std::endl;
+    
+            //IntroSort
+            
+            sorted=0;
+            beg=clock();
+            for(int j=0;j<100;j++)
+            {
+             
+                TYPET *T=Create<TYPET>(size);
+                Fill(T,size,co);
+             
+                intros(T,size);
+            
+                if(spr(T,0,size)==true)
+                {
+                    sorted++;
+                }
+             
+             
+                delete [] T;
+            }
+        fin=clock();
+        timeo=(long double)(fin-beg)/(CLOCKS_PER_SEC);
+        std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o pierwszych "<<co*100<<"% posortowanych elementach uzywajac introsorta w "<<timeo<<" s"<<std::endl;
+        write<<"Introsort :"<<size<<"\t"<<co*100<<"\t"<<timeo<<std::endl;
+        }
+    }
+    for(int s=0;s<5;s++)
+    { 
+        size=S[s]; 
+        sorted=0;
+        beg=clock();
+        
+        //QuickSort
+        for(int j=0;j<100;j++)
+        {
+             
+            TYPET *T=Create<TYPET>(size);
+            for(int i=0;i<size;i++)
+            {
+                T[i]=size-i;
+            }
+             
+            qs(T,0,size-1);
+             
+            if(spr(T,0,size)==true)
+            {
+                sorted++;
+            }
+             
+            delete [] T;
+        }
+        fin=clock();
+        timeo=(long double)(fin-beg)/(CLOCKS_PER_SEC);
+        std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o odwrotnie posortowanych elementach uzywajac quick sorta w "<<timeo<<" s"<<std::endl;
+        write<<"Quicksort :"<<size<<"\t rev \t"<<timeo<<std::endl;
 
-if(spr(T,0,size)==true)
-{
-    sorted++;
-}
+        
+        sorted=0;
+        beg=clock();
+        //MergeSort
+        for(int j=0;j<100;j++)
+        {
+             
+            TYPET *T=Create<TYPET>(size);
+            for(int i=0;i<size;i++)
+            {
+                T[i]=size-i;
+            }
+             
+            MS(T,0,size-1);
+             
+            if(spr(T,0,size)==true)
+            {
+                sorted++;
+            }
+             
+            delete [] T;
+        }
+        fin=clock();
+        timeo=(long double)(fin-beg)/(CLOCKS_PER_SEC);
+        std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o odwrotnie posortowanych elementch uzywajac merge sorta w "<<timeo<<" s"<<std::endl;
+        write<<"Mergesort :"<<size<<"\t rev \t"<<timeo<<std::endl;
 
-delete [] T;
-}
-fin=clock();
-timeo=(long double)(fin-beg)/CLOCKS_PER_SEC;
-std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o pierwszych "<<co*100<<"% posortowanych elementch uzywajac merge sorta w "<<timeo<<" s"<<std::endl;
-write<<"Mergesort :"<<size<<"\t"<<co*100<<"\t"<<timeo<<std::endl;
-sorted=0;
-beg=clock();
-for(int j=0;j<100;j++)
- {
-TYPET *T=Create<TYPET>(size);
-Fill(T,size,co);
-
- intros(T,size);
-
-
-if(spr(T,0,size)==true)
-{
-    sorted++;
-}
-
-delete [] T;
-}
-fin=clock();
-timeo=(long double)(fin-beg)/CLOCKS_PER_SEC;
-std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o pierwszych "<<co*100<<"% posortowanych elementach uzywajac introsorta w "<<timeo<<" s"<<std::endl;
-write<<"Introsort :"<<size<<"\t"<<co*100<<"\t"<<timeo<<std::endl;
-}
-}
- for(int s=0;s<5;s++)
-{ 
-    size=S[s]; 
-    sorted=0;
-    beg=clock();
-    for(int j=0;j<100;j++)
- {
-
-TYPET *T=Create<TYPET>(size);
- for(int i=0;i<size;i++)
- {
-     T[i]=size-i;
- }
-
- qs(T,0,size-1);
-
-if(spr(T,0,size)==true)
-{
-    sorted++;
-}
-
-delete [] T;
-}
-fin=clock();
-timeo=(long double)(fin-beg)/CLOCKS_PER_SEC;
-std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o odwrotnie posortowanych elementach uzywajac quick sorta w "<<timeo<<" s"<<std::endl;
-write<<"Quicksort :"<<size<<"\t rev \t"<<timeo<<std::endl;
-sorted=0;
-beg=clock();
-for(int j=0;j<100;j++)
- {
-TYPET *T=Create<TYPET>(size);
- for(int i=0;i<size;i++)
- {
-     T[i]=size-i;
- }
-
- MS(T,0,size-1);
-
-if(spr(T,0,size)==true)
-{
-    sorted++;
-}
-
-delete [] T;
-}
-fin=clock();
-timeo=(long double)(fin-beg)/CLOCKS_PER_SEC;
-std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o odwrotnie posortowanych elementch uzywajac merge sorta w "<<timeo<<" s"<<std::endl;
-write<<"Mergesort :"<<size<<"\t rev \t"<<timeo<<std::endl;
-sorted=0;
-beg=clock();
-for(int j=0;j<100;j++)
- {
-TYPET *T=Create<TYPET>(size);
- for(int i=0;i<size;i++)
- {
-     T[i]=size-i;
- }
-
- intros(T,size);
-
-if(spr(T,0,size)==true)
-{
-    sorted++;
-}
-
-delete [] T;
-}
-fin=clock();
-timeo=(long double)(fin-beg)/CLOCKS_PER_SEC;
-std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o odwrotnie posortowanych elementach uzywajac introsorta w "<<timeo<<" s"<<std::endl;
-write<<"Introsort :"<<size<<"\t rev \t"<<timeo<<std::endl;
-}
- return 0;
+    
+        sorted=0;
+        beg=clock();
+        for(int j=0;j<100;j++)
+        {
+            
+            TYPET *T=Create<TYPET>(size);
+            for(int i=0;i<size;i++)
+            {
+                T[i]=size-i;
+            }
+             
+            intros(T,size);
+             
+            if(spr(T,0,size)==true)
+            {
+                sorted++;
+            }
+            delete [] T;
+             
+             
+        }
+        fin=clock();
+        timeo=(long double)(fin-beg)/(CLOCKS_PER_SEC);
+        std::cout<<"posrotowano prawidolowo "<<sorted<<" tablic o wielkosci "<<size<<" o odwrotnie posortowanych elementach uzywajac introsorta w "<<timeo<<" s"<<std::endl;
+        write<<"Introsort :"<<size<<"\t rev \t"<<timeo<<std::endl;
+    }
+return 0;
 }
